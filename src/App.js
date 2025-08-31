@@ -266,7 +266,7 @@ const LoadingProgress = () => {
       clearInterval(interval);
       clearInterval(stepInterval);
     };
-  }, []);
+  }, [steps.length]);
 
   return (
     <div className="text-center">
