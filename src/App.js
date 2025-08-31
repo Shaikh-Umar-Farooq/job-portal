@@ -100,19 +100,19 @@ const supabaseClient = {
 
 // Simple router hook
 const useRouter = () => {
-  const [currentPath, setCurrentPath] = useState(window.location.hash.slice(1) || '/');
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
   
   useEffect(() => {
-    const handleHashChange = () => {
-      setCurrentPath(window.location.hash.slice(1) || '/');
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
     };
     
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
   
   const navigate = (path) => {
-    window.location.hash = path;
+    window.history.pushState({}, '', path);
     setCurrentPath(path);
   };
   
