@@ -111,6 +111,15 @@ const useRouter = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
   
+  // Track page views when path changes
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('config', 'G-RXF8SWX704', {
+        page_path: currentPath,
+      });
+    }
+  }, [currentPath]);
+  
   const navigate = (path) => {
     window.history.pushState({}, '', path);
     setCurrentPath(path);
@@ -209,9 +218,16 @@ const JobListings = ({ onViewApplyLink }) => {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-6">
-            <h1 className="text-3xl font-bold text-gray-900">Hire Box</h1>
-            <p className="text-gray-600 mt-2">Discover your next career move</p>
+          <div className="py-6 flex items-center">
+            <img
+              src="/logo.png"
+              alt="Hire Box Logo"
+              className="w-14 h-14 rounded-full mr-4 border border-gray-200 shadow-sm object-cover"
+            />
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">Hire Box</h1>
+              <p className="text-gray-600 ">Discover your next career move</p>
+            </div>
           </div>
         </div>
       </header>
@@ -320,6 +336,15 @@ const JobDetail = ({ jobId, onBack }) => {
   };
 
   const handleApplyClick = () => {
+    // Track apply button click
+    if (window.gtag) {
+      window.gtag('event', 'apply_click', {
+        event_category: 'engagement',
+        event_label: `${job?.company_name} - ${job?.designation}`,
+        value: job?.id
+      });
+    }
+    
     setShowLoading(true);
     setCanApply(false);
 
@@ -332,6 +357,15 @@ const JobDetail = ({ jobId, onBack }) => {
 
   const handleRedirect = () => {
     if (job?.apply_link) {
+      // Track successful application redirect
+      if (window.gtag) {
+        window.gtag('event', 'apply_redirect', {
+          event_category: 'conversion',
+          event_label: `${job?.company_name} - ${job?.designation}`,
+          value: job?.id
+        });
+      }
+      
       window.open(job.apply_link, '_blank');
     }
   };
