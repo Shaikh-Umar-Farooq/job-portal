@@ -314,7 +314,6 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
           <h2 className="text-2xl font-bold text-gray-900 mb-3">Latest Job Opportunities & Internships</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Explore verified job openings and internship opportunities from leading companies. 
-            Find your perfect role in technology, business, design, and more. Updated daily.
           </p>
         </section>
 
@@ -468,7 +467,7 @@ const AboutPage = ({ onBack }) => {
           <div className="py-6">
             <button
               onClick={onBack}
-              className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+              className="flex items-center text-gray-600 hover:text-gray-900  transition-colors"
             >
               <ChevronLeft size={20} className="mr-1" />
               Back to Jobs
@@ -483,9 +482,17 @@ const AboutPage = ({ onBack }) => {
           <h1 className="text-3xl font-bold text-gray-900 mb-6">About Us</h1>
           <div className="prose max-w-none">
             <p className="text-gray-600 text-lg">
-              <p>HireBox helps students and professionals discover the latest job and internship opportunities from top companies. Our goal is to make your job search simple, reliable, and fast.</p>
-              <p>We carefully curate openings so you can focus on applying to the right roles, without spending hours searching across multiple platforms.</p>
-              <p>At HireBox, we believe your next career move should be just a click away.</p>
+            <p>At <strong>HireBox</strong>, our mission is simple — to make job and internship opportunities easy to discover, accessible, and trustworthy.</p>
+    <p>We understand how frustrating it can be to spend hours searching across multiple platforms, only to find outdated or irrelevant listings. That’s why we created HireBox — a <strong>centralized platform</strong> where students, graduates, and professionals can quickly explore <strong>genuine and up-to-date openings</strong> from leading companies.</p>
+    <p>Unlike traditional portals, HireBox does not require lengthy sign-ups or complicated processes. We focus on keeping things <strong>simple, fast, and reliable</strong>:</p>
+    <ul>
+      <li>Curated job and internship listings from trusted sources.</li>
+      <li>Essential details at a glance for quick decisions.</li>
+      <li>Direct apply links that take you to official company portals.</li>
+    </ul>
+    <p>Our vision is to become the go-to platform for anyone looking to take the next step in their career, whether it’s a first internship, a graduate job, or a professional career move.</p>
+    <p>At HireBox, we believe your next opportunity should be just a click away.</p>
+
             </p>
           </div>
         </div>
@@ -513,7 +520,7 @@ const PrivacyPage = ({ onBack }) => {
           <div className="py-6">
             <button
               onClick={onBack}
-              className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+              className="flex items-center text-gray-600 hover:text-gray-900  transition-colors"
             >
               <ChevronLeft size={20} className="mr-1" />
               Back to Jobs
@@ -603,7 +610,7 @@ const TermsPage = ({ onBack }) => {
           <div className="py-6">
             <button
               onClick={onBack}
-              className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+              className="flex items-center text-gray-600 hover:text-gray-900  transition-colors"
             >
               <ChevronLeft size={20} className="mr-1" />
               Back to Jobs
@@ -755,7 +762,7 @@ const JobDetail = ({ jobId, onBack }) => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Job Not Found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 ">Job Not Found</h2>
           <button
             onClick={onBack}
             className="text-rose-600 hover:text-rose-700 font-medium"
@@ -775,7 +782,7 @@ const JobDetail = ({ jobId, onBack }) => {
           <div className="py-6">
             <button
               onClick={onBack}
-              className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ChevronLeft size={20} className="mr-1" />
               Back to Jobs
