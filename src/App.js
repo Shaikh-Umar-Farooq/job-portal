@@ -22,25 +22,16 @@ const supabaseClient = {
           callback(data);
         } catch (error) {
           console.error('Error fetching data:', error);
-          // Mock data for demonstration
+          // Mock data for demonstration (ordered by newest first)
           const mockJobs = [
             {
-              id: 13,
-              company_name: 'Atomberg',
-              designation: 'Intern',
-              location: 'Pune, India',
-              batch: '2026/2025',
-              apply_link: 'https://atomberg.darwinbox.in/ms/candidatev2/main/careers/jobDetails/a68ad78c452674',
-              created_at: '2025-08-31T14:46:59.88029+00:00'
-            },
-            {
-              id: 14,
-              company_name: 'TechCorp',
-              designation: 'Software Developer',
-              location: 'Bangalore, India',
-              batch: '2025/2024',
-              apply_link: 'https://techcorp.com/apply/14',
-              created_at: '2025-08-30T10:30:00.000Z'
+              id: 16,
+              company_name: 'DataScience Inc',
+              designation: 'Data Analyst',
+              location: 'Hyderabad, India',
+              batch: '2025',
+              apply_link: 'https://datascience.com/jobs/16',
+              created_at: '2025-01-03T09:15:22.000Z'
             },
             {
               id: 15,
@@ -49,16 +40,25 @@ const supabaseClient = {
               location: 'Mumbai, India',
               batch: '2026',
               apply_link: 'https://startupx.com/careers/15',
-              created_at: '2025-08-29T16:45:30.000Z'
+              created_at: '2025-01-02T16:45:30.000Z'
             },
             {
-              id: 16,
-              company_name: 'DataScience Inc',
-              designation: 'Data Analyst',
-              location: 'Hyderabad, India',
-              batch: '2025',
-              apply_link: 'https://datascience.com/jobs/16',
-              created_at: '2025-08-28T09:15:22.000Z'
+              id: 14,
+              company_name: 'TechCorp',
+              designation: 'Software Developer',
+              location: 'Bangalore, India',
+              batch: '2025/2024',
+              apply_link: 'https://techcorp.com/apply/14',
+              created_at: '2025-01-01T10:30:00.000Z'
+            },
+            {
+              id: 13,
+              company_name: 'Atomberg',
+              designation: 'Intern',
+              location: 'Pune, India',
+              batch: '2026/2025',
+              apply_link: 'https://atomberg.darwinbox.in/ms/candidatev2/main/careers/jobDetails/a68ad78c452674',
+              created_at: '2024-12-31T14:46:59.88029+00:00'
             }
           ];
           callback(mockJobs);
@@ -193,7 +193,9 @@ const JobListings = ({ onViewApplyLink }) => {
     const fetchJobs = async () => {
       try {
         supabaseClient.from('jobs').select('*').then((data) => {
-          setJobs(data);
+          // Sort jobs by creation date in descending order (newest first)
+          const sortedJobs = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          setJobs(sortedJobs);
           setLoading(false);
         });
       } catch (error) {
