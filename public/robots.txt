@@ -5,7 +5,7 @@ Disallow: /private/
 Disallow: /admin/
 
 # Sitemap
-Sitemap: https://hirebox.netlify.app/sitemap.xml
+Sitemap: https://hirebox.cc/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1
