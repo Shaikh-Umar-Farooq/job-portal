@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Calendar, GraduationCap, Building2, ChevronLeft, ExternalLink, Loader2 } from 'lucide-react';
+import { MapPin, Calendar, GraduationCap, Building2, ChevronLeft, ExternalLink, Loader2, Search, X } from 'lucide-react';
 
 // Supabase configuration - Replace with your actual credentials
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
@@ -196,7 +196,40 @@ const JobCard = ({ job, onViewApplyLink }) => {
 // Job Listings Page
 const JobListings = ({ onViewApplyLink, navigate }) => {
   const [jobs, setJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter jobs based on search query
+  const filterJobs = (jobsList, query) => {
+    if (!query.trim()) {
+      return jobsList;
+    }
+
+    const searchTerm = query.toLowerCase().trim();
+    return jobsList.filter(job => 
+      job.company_name.toLowerCase().includes(searchTerm) ||
+      job.designation.toLowerCase().includes(searchTerm) ||
+      job.location.toLowerCase().includes(searchTerm) ||
+      job.batch.toLowerCase().includes(searchTerm)
+    );
+  };
+
+  // Update filtered jobs when search query or jobs change
+  useEffect(() => {
+    const filtered = filterJobs(jobs, searchQuery);
+    setFilteredJobs(filtered);
+  }, [jobs, searchQuery]);
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Clear search
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   // Generate structured data for job listings
   const generateJobStructuredData = (jobs) => {
@@ -269,6 +302,7 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
           // Sort jobs by creation date in descending order (newest first)
           const sortedJobs = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           setJobs(sortedJobs);
+          setFilteredJobs(sortedJobs);
           setLoading(false);
         });
       } catch (error) {
@@ -307,34 +341,111 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
         </div>
       </header>
 
-      {/* Main Content */}
+            {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* SEO Content Section */}
         <section className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">Latest Job Opportunities & Internships</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">Latest Opportunities</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Explore verified job openings and internship opportunities from leading companies. 
+            Explore verified job openings and internship opportunities from leading companies.
           </p>
         </section>
 
-        {/* Job Grid */}
-        <section aria-label="Job listings">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {jobs.map((job) => (
-            <JobCard
-              key={job.id}
-              job={job}
-              onViewApplyLink={onViewApplyLink}
-            />
-          ))}
-          {jobs.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No job openings available at the moment.</p>
+        {/* Search Section - Airbnb Inspired */}
+        <section className="mb-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="relative">
+              <div className="flex items-center bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+                <div className="flex-1 flex items-center pl-6 pr-2 py-4">
+                  <Search size={20} className="text-gray-400 mr-3" />
+                  <input
+                    type="text"
+                    placeholder="Search by company, role, location, or batch..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="w-full text-gray-700 placeholder-gray-400 bg-transparent outline-none text-base"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={clearSearch}
+                      className="ml-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <X size={16} className="text-gray-400" />
+                    </button>
+                  )}
+                </div>
+                <button className="bg-rose-600 hover:bg-rose-700 text-white p-3 rounded-full mr-2 transition-colors">
+                  <Search size={20} />
+                </button>
+              </div>
             </div>
-          )}
+            
+            {/* Search Results Summary */}
+            {searchQuery && (
+              <div className="mt-4 text-center">
+                <p className="text-gray-600 text-sm">
+                  {filteredJobs.length} {filteredJobs.length === 1 ? 'result' : 'results'} found for "{searchQuery}"
+                  {filteredJobs.length === 0 && (
+                    <span className="block mt-1 text-gray-500">
+                      Try searching with different keywords like company name, job title, location, or batch year
+                    </span>
+                  )}
+                </p>
+              </div>
+            )}
           </div>
         </section>
-      </main>
+
+  {/* Top Banner Ad */}
+  <div className="mb-6">
+    <div className="w-full h-16 bg-gray-50 border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-sm">
+      Ad Space (728x90 / 320x50)
+    </div>
+  </div>
+
+     {/* Job Grid */}
+   <section aria-label="Job listings">
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       {filteredJobs.map((job, index) => (
+        <>
+          <JobCard
+            key={job.id}
+            job={job}
+            onViewApplyLink={onViewApplyLink}
+          />
+          
+          {/* In-grid Ad after 2nd, 5th, then every 3rd card after that */}
+          {((index === 0) || (index === 3) || (index > 4 && (index - 1) % 3 === 0)) && (
+            <div className="bg-white border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-sm ">
+              Sponsored Ad (Job-style native ad)
+            </div>
+          )}
+        </>
+      ))}
+
+             {filteredJobs.length === 0 && jobs.length > 0 && (
+         <div className="text-center py-12 col-span-full">
+           <p className="text-gray-500 text-lg">No jobs match your search criteria.</p>
+           <p className="text-gray-400 text-sm mt-2">Try adjusting your search terms or clearing the search.</p>
+         </div>
+       )}
+       
+       {jobs.length === 0 && !loading && (
+         <div className="text-center py-12 col-span-full">
+           <p className="text-gray-500 text-lg">No job openings available at the moment.</p>
+         </div>
+       )}
+    </div>
+  </section>
+
+  {/* Bottom Banner Ad */}
+  <div className="mt-8">
+    <div className="w-full h-16 bg-gray-50 border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-sm">
+      Ad Space (728x90 / 320x50)
+    </div>
+  </div>
+</main>
 
       <Footer navigate={navigate} />
     </div>
@@ -792,75 +903,73 @@ const JobDetail = ({ jobId, onBack }) => {
       </header>
 
       {/* Job Detail Card */}
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-lg">
-          <div className="p-8">
-            {/* Job Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">{job.designation}</h1>
-              <div className="flex items-center justify-center mb-2">
-                <Building2 size={20} className="mr-2 text-gray-600" />
-                <span className="text-xl font-semibold text-gray-800">{job.company_name}</span>
-              </div>
-            </div>
+      <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <div className="bg-white rounded-2xl shadow-sm">
+    <div className="p-4 sm:p-6 space-y-6">
 
-            {/* Job Details Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-                <MapPin className="text-rose-600 mr-3" size={24} />
-                <div>
-                  <p className="text-sm text-gray-500 font-medium">Location</p>
-                  <p className="text-gray-900 font-semibold">{job.location}</p>
-                </div>
-              </div>
+      {/* Job Title & Company */}
+      <div className="text-center">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">{job.designation}</h1>
+        <p className="text-gray-600 mt-1 flex items-center justify-center">
+          <Building2 size={16} className="mr-1 text-gray-500" />
+          {job.company_name}
+        </p>
+      </div>
 
-              <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-                <GraduationCap className="text-rose-600 mr-3" size={24} />
-                <div>
-                  <p className="text-sm text-gray-500 font-medium">Batch</p>
-                  <p className="text-gray-900 font-semibold">{job.batch}</p>
-                </div>
-              </div>
+      {/* Job Meta (inline style for compactness) */}
+      <div className="flex flex-col sm:flex-row sm:justify-center sm:space-x-6 text-sm text-gray-700 space-y-2 sm:space-y-0">
+        <span className="flex items-center">
+          <MapPin size={16} className="mr-1 text-rose-600" /> {job.location}
+        </span>
+        <span className="flex items-center">
+          <GraduationCap size={16} className="mr-1 text-rose-600" /> {job.batch}
+        </span>
+        <span className="flex items-center">
+          <Calendar size={16} className="mr-1 text-rose-600" /> {formatDate(job.created_at)}
+        </span>
+      </div>
 
-              <div className="flex items-center p-4 bg-gray-50 rounded-lg md:col-span-2">
-                <Calendar className="text-rose-600 mr-3" size={24} />
-                <div>
-                  <p className="text-sm text-gray-500 font-medium">Posted</p>
-                  <p className="text-gray-900 font-semibold">{formatDate(job.created_at)}</p>
-                </div>
-              </div>
-            </div>
+      {/* Ad Slot (Airbnb-style inline ad, light background) */}
+      <div className="w-full h-14 bg-gray-50 border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+        Ad Space (320x50 / 468x60)
+      </div>
 
-            {/* Apply Section */}
-            <div className="border-t border-gray-200 pt-8">
-              {!showLoading && !canApply && (
-                <button
-                  onClick={handleApplyClick}
-                  className="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors text-lg"
-                >
-                  Apply Now
-                </button>
-              )}
+      {/* Apply Button Section */}
+      <div className="pt-2">
+        {!showLoading && !canApply && (
+          <button
+            onClick={handleApplyClick}
+            className="w-full bg-rose-600 hover:bg-rose-700 text-white font-medium py-3 rounded-xl transition-colors text-base"
+          >
+            Get Apply Link
+          </button>
+        )}
 
-              {showLoading && (
-                <div className="py-8">
-                  <LoadingProgress />
-                </div>
-              )}
-
-              {canApply && (
-                <button
-                  onClick={handleRedirect}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors text-lg flex items-center justify-center"
-                >
-                  Apply Now
-                  <ExternalLink size={20} className="ml-2" />
-                </button>
-              )}
-            </div>
+        {showLoading && (
+          <div className="py-6">
+            <LoadingProgress />
           </div>
-        </div>
-      </main>
+        )}
+
+        {canApply && (
+          <button
+            onClick={handleRedirect}
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-xl transition-colors text-base flex items-center justify-center"
+          >
+            Apply Now
+            <ExternalLink size={18} className="ml-2" />
+          </button>
+        )}
+      </div>
+
+      {/* Optional Bottom Ad */}
+      <div className="w-full h-14 bg-gray-50 border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+        Ad Space (Sticky / Bottom Banner)
+      </div>
+    </div>
+  </div>
+</main>
+
     </div>
   );
 };
