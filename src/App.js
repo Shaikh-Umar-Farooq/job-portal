@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Calendar, GraduationCap, Building2, ChevronLeft, ExternalLink, Loader2, Search, X } from 'lucide-react';
+import { MapPin, Calendar, GraduationCap, Building2, ChevronLeft, ExternalLink, Loader2, Search, X, ChevronRight } from 'lucide-react';
 
 // Supabase configuration - Replace with your actual credentials
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
@@ -197,8 +197,13 @@ const JobCard = ({ job, onViewApplyLink }) => {
 const JobListings = ({ onViewApplyLink, navigate }) => {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
+  const [paginatedJobs, setPaginatedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  
+  const ITEMS_PER_PAGE = 18;
 
   // Filter jobs based on search query
   const filterJobs = (jobsList, query) => {
@@ -215,11 +220,31 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
     );
   };
 
+  // Pagination logic
+  const paginateJobs = (jobsList, page, itemsPerPage) => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return jobsList.slice(startIndex, endIndex);
+  };
+
   // Update filtered jobs when search query or jobs change
   useEffect(() => {
     const filtered = filterJobs(jobs, searchQuery);
     setFilteredJobs(filtered);
+    
+    // Reset to first page when search changes
+    setCurrentPage(1);
+    
+    // Calculate total pages
+    const pages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+    setTotalPages(pages);
   }, [jobs, searchQuery]);
+
+  // Update paginated jobs when filtered jobs or current page changes
+  useEffect(() => {
+    const paginated = paginateJobs(filteredJobs, currentPage, ITEMS_PER_PAGE);
+    setPaginatedJobs(paginated);
+  }, [filteredJobs, currentPage]);
 
   // Handle search input change
   const handleSearchChange = (e) => {
@@ -229,6 +254,27 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
   // Clear search
   const clearSearch = () => {
     setSearchQuery('');
+  };
+
+  // Pagination controls
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      // Scroll to top when changing pages
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
   };
 
   // Generate structured data for job listings
@@ -407,7 +453,7 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
      {/* Job Grid */}
    <section aria-label="Job listings">
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-       {filteredJobs.map((job, index) => (
+       {paginatedJobs.map((job, index) => (
         <>
           <JobCard
             key={job.id}
@@ -424,7 +470,7 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
         </>
       ))}
 
-             {filteredJobs.length === 0 && jobs.length > 0 && (
+       {filteredJobs.length === 0 && jobs.length > 0 && (
          <div className="text-center py-12 col-span-full">
            <p className="text-gray-500 text-lg">No jobs match your search criteria.</p>
            <p className="text-gray-400 text-sm mt-2">Try adjusting your search terms or clearing the search.</p>
@@ -436,8 +482,93 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
            <p className="text-gray-500 text-lg">No job openings available at the moment.</p>
          </div>
        )}
-    </div>
-  </section>
+     </div>
+   </section>
+
+   {/* Pagination */}
+   {totalPages > 1 && (
+     <section className="mt-8 flex justify-center">
+       <div className="flex items-center space-x-2">
+         {/* Previous Button */}
+         <button
+           onClick={goToPreviousPage}
+           disabled={currentPage === 1}
+           className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+             currentPage === 1
+               ? 'text-gray-400 cursor-not-allowed'
+               : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
+           }`}
+         >
+           <ChevronLeft size={16} className="mr-1" />
+           Previous
+         </button>
+
+         {/* Page Numbers */}
+         <div className="flex items-center space-x-1">
+           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+             let pageNumber;
+             if (totalPages <= 5) {
+               pageNumber = i + 1;
+             } else if (currentPage <= 3) {
+               pageNumber = i + 1;
+             } else if (currentPage >= totalPages - 2) {
+               pageNumber = totalPages - 4 + i;
+             } else {
+               pageNumber = currentPage - 2 + i;
+             }
+
+             return (
+               <button
+                 key={pageNumber}
+                 onClick={() => goToPage(pageNumber)}
+                 className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+                   currentPage === pageNumber
+                     ? 'bg-rose-600 text-white'
+                     : 'text-gray-700 hover:bg-rose-50 hover:text-rose-600'
+                 }`}
+               >
+                 {pageNumber}
+               </button>
+             );
+           })}
+           
+           {totalPages > 5 && currentPage < totalPages - 2 && (
+             <>
+               <span className="text-gray-400 px-2">...</span>
+               <button
+                 onClick={() => goToPage(totalPages)}
+                 className="w-10 h-10 rounded-lg text-sm font-medium text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+               >
+                 {totalPages}
+               </button>
+             </>
+           )}
+         </div>
+
+         {/* Next Button */}
+         <button
+           onClick={goToNextPage}
+           disabled={currentPage === totalPages}
+           className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+             currentPage === totalPages
+               ? 'text-gray-400 cursor-not-allowed'
+               : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
+           }`}
+         >
+           Next
+           <ChevronRight size={16} className="ml-1" />
+         </button>
+       </div>
+     </section>
+   )}
+
+   {/* Pagination Info */}
+   {filteredJobs.length > 0 && (
+     <div className="mt-6 text-center text-sm text-gray-600">
+       Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredJobs.length)} of {filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'}
+       {searchQuery && <span className="ml-1">for "{searchQuery}"</span>}
+     </div>
+   )}
 
   {/* Bottom Banner Ad */}
   <div className="mt-8">
