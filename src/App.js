@@ -186,7 +186,7 @@ const JobCard = ({ job, onViewApplyLink }) => {
         <div className="sr-only">
           <span itemProp="description">{job.designation} position at {job.company_name} in {job.location}</span>
           <span itemProp="employmentType">{job.designation.toLowerCase().includes('intern') ? 'INTERN' : 'FULL_TIME'}</span>
-          <span itemProp="url">https://hirebox.netlify.app/{job.id}</span>
+          <span itemProp="url">https://hirebox.cc/{job.id}</span>
         </div>
       </div>
     </article>
@@ -296,7 +296,7 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
         }
       },
       "employmentType": job.designation.toLowerCase().includes('intern') ? 'INTERN' : 'FULL_TIME',
-      "url": `https://hirebox.netlify.app/${job.id}`,
+      "url": `https://hirebox.cc/${job.id}`,
       "applicationContact": {
         "@type": "ContactPoint",
         "url": job.apply_link
@@ -381,7 +381,7 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
             />
             <div>
               <h1 className="text-xl font-bold text-gray-900">HireBox</h1>
-              <p className="text-gray-600">Find Latest Jobs & Internships from Top Companies</p>
+              <p className="text-gray-600">Your Box of Career Opportunities</p>
             </div>
           </div>
         </div>
@@ -444,11 +444,11 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
         </section>
 
   {/* Top Banner Ad */}
-  <div className="mb-6">
+  {/* <div className="mb-6">
     <div className="w-full h-16 bg-gray-50 border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-sm">
       Ad Space (728x90 / 320x50)
     </div>
-  </div>
+  </div> */}
 
      {/* Job Grid */}
    <section aria-label="Job listings">
@@ -462,11 +462,11 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
           />
           
           {/* In-grid Ad after 2nd, 5th, then every 3rd card after that */}
-          {((index === 0) || (index === 3) || (index > 4 && (index - 1) % 3 === 0)) && (
+          {/* {((index === 0) || (index === 3) || (index > 4 && (index - 1) % 3 === 0)) && (
             <div className="bg-white border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-sm ">
               Sponsored Ad (Job-style native ad)
             </div>
-          )}
+          )} */}
         </>
       ))}
 
@@ -571,11 +571,11 @@ const JobListings = ({ onViewApplyLink, navigate }) => {
    )}
 
   {/* Bottom Banner Ad */}
-  <div className="mt-8">
+  {/* <div className="mt-8">
     <div className="w-full h-16 bg-gray-50 border border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 text-sm">
       Ad Space (728x90 / 320x50)
     </div>
-  </div>
+  </div> */}
 </main>
 
       <Footer navigate={navigate} />
@@ -1061,9 +1061,9 @@ const JobDetail = ({ jobId, onBack }) => {
       </div>
 
       {/* Ad Slot (Airbnb-style inline ad, light background) */}
-      <div className="w-full h-14 bg-gray-50 border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+      {/* <div className="w-full h-14 bg-gray-50 border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
         Ad Space (320x50 / 468x60)
-      </div>
+      </div> */}
 
       {/* Apply Button Section */}
       <div className="pt-2">
@@ -1094,9 +1094,9 @@ const JobDetail = ({ jobId, onBack }) => {
       </div>
 
       {/* Optional Bottom Ad */}
-      <div className="w-full h-14 bg-gray-50 border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+      {/* <div className="w-full h-14 bg-gray-50 border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
         Ad Space (Sticky / Bottom Banner)
-      </div>
+      </div> */}
     </div>
   </div>
 </main>
