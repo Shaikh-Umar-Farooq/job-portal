@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hirebox.netlify.app/</loc>
+    <loc>https://hirebox.cc/</loc>
     <lastmod>2025-01-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://hirebox.netlify.app/about</loc>
+    <loc>https://hirebox.cc/about</loc>
     <lastmod>2025-01-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hirebox.netlify.app/privacy</loc>
+    <loc>https://hirebox.cc/privacy</loc>
     <lastmod>2025-01-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://hirebox.netlify.app/terms</loc>
+    <loc>https://hirebox.cc/terms</loc>
     <lastmod>2025-01-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
